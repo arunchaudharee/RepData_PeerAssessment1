@@ -70,7 +70,7 @@ library(lubridate)
 library(ggplot2)
 ```
 
-Unzip the zipped data file.
+Since Github repo for this assignment contains dataset and it is forked and cloned, no need to download data again. Simply Unzip the zipped data file.
 
 
 ```r
@@ -78,6 +78,8 @@ unzip("activity.zip")
 ```
 
 ### 1. Load the data (i.e. read.csv())
+
+Load data using read.csv() function. 
 
 
 ```r
@@ -143,7 +145,7 @@ summary(activityData)
 ##  NA's   :2304     (Other)   :15840
 ```
 
-It is better to load data again to coerce all columns ("steps", "date" and "interval") to appropriate class ("numeric", "character", "integer").
+From structure of data, since 'date' is a factor and both 'steps' and 'interval' are integer, it is better to load data again to coerce all columns ("steps", "date" and "interval") to appropriate class ("numeric", "character", "integer").
 
 
 ```r
@@ -151,7 +153,7 @@ activityData <- read.csv("activity.csv", header = TRUE, sep = "," ,
                          colClasses = c("numeric", "character", "integer"))
 ```
 
-Let us tidy the data. Change the date into date format using lubridate package.
+Let us tidy the data. Change the date into date format using ymd() function of lubridate package.
 
 
 ```r
@@ -496,11 +498,16 @@ str(dataNoNAs)
 
 ### 2. Make a panel plot containing a time series plot (i.e. type="l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). See the README file in the GitHub repository to see an example of what this plot should look like using simulated data.
 
+Take dataNoNAs data, group_by 'interval' and 'week' and then summarise mean of steps.
+
 
 ```r
 intervalNoNAs <- dataNoNAs %>%
         group_by(interval, week) %>%
         summarise(steps = mean(steps))
+
+# Now Make the panel plot.
+
 ggplot(intervalNoNAs, aes(x=interval, y=steps, color = week)) + 
         geom_line() +
         labs(title = "Average no. of steps across all weekday days or weekend",

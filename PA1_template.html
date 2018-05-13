@@ -340,10 +340,11 @@ $(document).ready(function () {
 ## 
 ##     date</code></pre>
 <pre class="r"><code>library(ggplot2)</code></pre>
-<p>Unzip the zipped data file.</p>
+<p>Since Github repo for this assignment contains dataset and it is forked and cloned, no need to download data again. Simply Unzip the zipped data file.</p>
 <pre class="r"><code>unzip(&quot;activity.zip&quot;)</code></pre>
 <div id="load-the-data-i.e.read.csv" class="section level3">
 <h3>1. Load the data (i.e. read.csv())</h3>
+<p>Load data using read.csv() function.</p>
 <pre class="r"><code>activityData &lt;- read.csv(&quot;activity.csv&quot;, header=TRUE, sep = &quot;,&quot;)</code></pre>
 </div>
 <div id="processtransform-the-data-if-necessary-into-a-format-suitable-for-your-analysis." class="section level3">
@@ -379,10 +380,10 @@ $(document).ready(function () {
 ##  3rd Qu.: 12.00   2012-10-05:  288   3rd Qu.:1766.2  
 ##  Max.   :806.00   2012-10-06:  288   Max.   :2355.0  
 ##  NA's   :2304     (Other)   :15840</code></pre>
-<p>It is better to load data again to coerce all columns (“steps”, “date” and “interval”) to appropriate class (“numeric”, “character”, “integer”).</p>
+<p>From structure of data, since ‘date’ is a factor and both ‘steps’ and ‘interval’ are integer, it is better to load data again to coerce all columns (“steps”, “date” and “interval”) to appropriate class (“numeric”, “character”, “integer”).</p>
 <pre class="r"><code>activityData &lt;- read.csv(&quot;activity.csv&quot;, header = TRUE, sep = &quot;,&quot; , 
                          colClasses = c(&quot;numeric&quot;, &quot;character&quot;, &quot;integer&quot;))</code></pre>
-<p>Let us tidy the data. Change the date into date format using lubridate package.</p>
+<p>Let us tidy the data. Change the date into date format using ymd() function of lubridate package.</p>
 <pre class="r"><code>activityData$date &lt;- ymd(activityData$date)</code></pre>
 <p>Check the structure/summary of data.</p>
 <pre class="r"><code>str(activityData)</code></pre>
@@ -585,9 +586,13 @@ head(dataNoNAs)</code></pre>
 </div>
 <div id="make-a-panel-plot-containing-a-time-series-plot-i.e.typel-of-the-5-minute-interval-x-axis-and-the-average-number-of-steps-taken-averaged-across-all-weekday-days-or-weekend-days-y-axis.-see-the-readme-file-in-the-github-repository-to-see-an-example-of-what-this-plot-should-look-like-using-simulated-data." class="section level3">
 <h3>2. Make a panel plot containing a time series plot (i.e. type=“l”) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). See the README file in the GitHub repository to see an example of what this plot should look like using simulated data.</h3>
+<p>Take dataNoNAs data, group_by ‘interval’ and ‘week’ and then summarise mean of steps.</p>
 <pre class="r"><code>intervalNoNAs &lt;- dataNoNAs %&gt;%
         group_by(interval, week) %&gt;%
         summarise(steps = mean(steps))
+
+# Now Make the panel plot.
+
 ggplot(intervalNoNAs, aes(x=interval, y=steps, color = week)) + 
         geom_line() +
         labs(title = &quot;Average no. of steps across all weekday days or weekend&quot;,
